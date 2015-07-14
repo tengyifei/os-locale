@@ -8,6 +8,7 @@ function getLocale(str) {
 }
 
 module.exports = function (cb) {
+
 	if (cache) {
 		setImmediate(cb, null, cache);
 		return;
@@ -34,12 +35,12 @@ module.exports = function (cb) {
 			cb(null, cache);
 		});
 	} else if (process.platform === 'darwin') {
-		childProcess.execFile('defaults read -g AppleLocale', function (err, stdout) {
+		childProcess.execFile('defaults', ['read', '-g', 'AppleLocale'], function (err, stdout) {
 			if (err) {
 				cb(err);
 				return;
 			}
-			cache = getLocale(stdout);
+			cache = stdout.trim();
 			cb(null, cache);
 		});
 	} else {

@@ -33,6 +33,15 @@ module.exports = function (cb) {
 			cache = lcid.from(lcidCode) || 'en_US';
 			cb(null, cache);
 		});
+	} else if (process.platform === 'darwin') {
+		childProcess.execFile('defaults read -g AppleLocale', function (err, stdout) {
+			if (err) {
+				cb(err);
+				return;
+			}
+			cache = getLocale(stdout);
+			cb(null, cache);
+		});
 	} else {
 		childProcess.execFile('locale', function (err, stdout) {
 			if (err) {
